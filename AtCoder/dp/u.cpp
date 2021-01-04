@@ -58,9 +58,9 @@ int main() {
     }
   }
   REP(mask, 1 << N) {
-    for(int mask2 = mask; mask2 > 0; mask2 = (mask2 - 1) & mask) {
-      ll nxt = dp[mask - mask2] + pre[mask2];
-      chmax(dp[mask], nxt);
+    REP(mask2, 1 << N) {
+      int mask3 = mask2 & mask;
+      chmax(dp[mask], dp[mask - mask3] + pre[mask3]);
     }
   }
   cout << dp[(1 << N) - 1] << endl;
