@@ -43,24 +43,40 @@ const int MOD = 1000000007;
 int main() {
   cin.tie(nullptr);
   ios::sync_with_stdio(false);
-  int N;
-  cin >> N;
-  vector<vector<ll>> A(N, vector<ll>(N));
-  REP(i, N) REP(j, N) cin >> A[i][j];
-  vector<ll> pre(1 << N), dp(1 << N);
+  int N, M;
+  cin >> N >> M;
+  vector<vector<int>> AB(N, vector<int>(N));
+
+  REP(i, M) {
+    int A, B;
+    cin >> A >> B;
+    A--;
+    B--;
+    AB[A][B] = 1;
+    AB[B][A] = 1;
+  }
+  REP(i, N) AB[i][i] = 1;
+
+  vector<int> pre(1 << N), dp(1 << N, INF);
   REP(mask, 1 << N) {
+    int ok = 1;
     REP(i, N) {
       REP(j, i) {
         if((mask & (1 << i)) && (mask & (1 << j))) {
-          pre[mask] += A[i][j];
+          if(AB[i][j] == 0)
+            ok = 0;
         }
       }
     }
+    pre[mask] = ok;
   }
   REP(mask, 1 << N) {
     for(int mask2 = mask; mask2 > 0; mask2 = (mask2 - 1) & mask) {
-      ll nxt = dp[mask - mask2] + pre[mask2];
-      chmax(dp[mask], nxt);
+      if(pre[mask] == 1) {
+        dp[mask] = 1;
+      } else {
+        chmin(dp[mask], dp[mask - mask2] + dp[mask2]);
+      }
     }
   }
   cout << dp[(1 << N) - 1] << endl;
