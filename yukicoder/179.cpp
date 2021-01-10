@@ -1,0 +1,87 @@
+#include <algorithm>
+#include <cassert>
+#include <cmath>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <random>
+#include <set>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
+using namespace std;
+typedef long long ll;
+
+template <class T> inline bool chmin(T &a, T b) {
+  if(a > b) {
+    a = b;
+    return true;
+  }
+  return false;
+}
+template <class T> inline bool chmax(T &a, T b) {
+  if(a < b) {
+    a = b;
+    return true;
+  }
+  return false;
+}
+
+const int INF = (1 << 30) - 1;
+const ll INFLL = (1LL << 61) - 1;
+const int MOD = 1000000007;
+#define ALL(a) (a).begin(), (a).end()
+#define rALL(a) (a).rbegin(), (a).rend()
+#define FOR(i, a, b) for(int i = (a); i < (b); ++i)
+#define REP(i, n) FOR(i, 0, n)
+
+int main() {
+  cin.tie(nullptr);
+  ios::sync_with_stdio(false);
+  int H, W;
+  cin >> H >> W;
+  vector<string> ss(H);
+  REP(i, H) { cin >> ss[i]; }
+
+  bool ans = false;
+  REP(i, H) {
+    FOR(j, -W, W) {
+      if(i == 0 && j == 0)
+        continue;
+      //下にi、右にj移動してできるかどうか
+      int flag = true;
+      vector<vector<bool>> field(H, vector<bool>(W, false));
+      REP(k, H) {
+        REP(l, W) {
+          if(!field[k][l] && ss[k][l] == '#') {
+            if(k + i >= H) {
+              flag = false;
+            } else if(l + j >= W || l + j < 0) {
+              flag = false;
+            } else {
+              if(ss[k + i][l + j] == '#') {
+                field[k + i][l + j] = true;
+              } else {
+                flag = false;
+              }
+            }
+          }
+        }
+      }
+      if(flag)
+        ans = true;
+    }
+  }
+  if(ans) {
+    bool flag = false;
+    REP(i, H) REP(j, W) if(ss[i][j] == '#') flag = true;
+    ans = flag;
+  }
+
+  cout << (ans ? "YES" : "NO") << endl;
+}
