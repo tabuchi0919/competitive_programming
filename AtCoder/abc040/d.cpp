@@ -75,19 +75,40 @@ int main() {
   ios::sync_with_stdio(false);
   int N, M;
   cin >> N >> M;
+  vector<tuple<int, int, int>> ABY;
+  REP(i, M) {
+    int a, b, y;
+    cin >> a >> b >> y;
+    a--;
+    b--;
+    ABY.emplace_back(a, b, y);
+  }
   UnionFind uf(N);
-  for(int i = 0; i < M; i++) {
-    int x, y, z;
-    cin >> x >> y >> z;
-    x--;
-    y--;
-    uf.merge(x, y);
+  sort(ALL(ABY), [](auto const &lhs, auto const &rhs) {
+    return get<2>(lhs) > get<2>(rhs);
+  });
+  int Q;
+  cin >> Q;
+  vector<int> ans(Q);
+  vector<tuple<int, int, int>> vwq;
+  REP(i, Q) {
+    int v, w;
+    cin >> v >> w;
+    v--;
+    vwq.emplace_back(v, w, i);
   }
-  int ans = 0;
-  for(int i = 0; i < N; i++) {
-    if(i == uf.root(i)) {
-      ans++;
+  sort(ALL(vwq), [](auto const &lhs, auto const &rhs) {
+    return get<1>(lhs) > get<1>(rhs);
+  });
+  int cur = 0;
+  REP(i, Q) {
+    while(get<2>(ABY[cur]) > get<1>(vwq[i])) {
+      uf.merge(get<0>(ABY[cur]), get<1>(ABY[cur]));
+      cur++;
+      if(cur == M)
+        break;
     }
+    ans[get<2>(vwq[i])] = uf.size(get<0>(vwq[i]));
   }
-  cout << ans << endl;
+  REP(i, Q) cout << ans[i] << endl;
 }
