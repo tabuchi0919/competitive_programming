@@ -1,21 +1,36 @@
 #include <algorithm>
-#include <deque>
+#include <cassert>
+#include <cmath>
 #include <functional>
 #include <iomanip>
 #include <iostream>
-#include <iterator>
 #include <map>
-#include <math.h>
 #include <numeric>
 #include <queue>
 #include <random>
 #include <set>
-#include <string.h>
-#include <tuple>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 using namespace std;
 typedef long long ll;
+
+template <class T> inline bool chmin(T &a, T b) {
+  if(a > b) {
+    a = b;
+    return true;
+  }
+  return false;
+}
+template <class T> inline bool chmax(T &a, T b) {
+  if(a < b) {
+    a = b;
+    return true;
+  }
+  return false;
+}
 
 const int INF = (1 << 30) - 1;
 const ll INFLL = (1LL << 61) - 1;
@@ -25,16 +40,15 @@ const int MOD = 1000000007;
 #define FOR(i, a, b) for(int i = (a); i < (b); ++i)
 #define REP(i, n) FOR(i, 0, n)
 
-ll gcd(ll a, ll b) {
-  if(a % b == 0) {
-    return (b);
-  } else {
-    return (gcd(b, a % b));
-  }
-}
-
 int main() {
   cin.tie(nullptr);
   ios::sync_with_stdio(false);
-  cout << gcd(120, 48) << endl;
+  int N;
+  cin >> N;
+  vector<ll> a(N);
+  REP(i, N) cin >> a[i];
+  ll g = 0ll;
+  REP(i, N) g = gcd(g, a[i]);
+  REP(i, N - 1) { cout << a[i] / g << ':'; }
+  cout << a[N - 1] / g << endl;
 }
